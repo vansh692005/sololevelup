@@ -115,7 +115,7 @@
       "reward_coins": 500,
       "reward_xp": 1000
     },
-    "personal_quests": 1
+    "personal_quests": 3
   },
   "achievements": [
     {
@@ -186,6 +186,24 @@
     {
       "id": 1,
       "name": "Do 2 pushups more",
+      "description": "",
+      "completed": false,
+      "created_date": "2025-07-24",
+      "reward_xp": 100,
+      "reward_coins": 50
+    },
+    {
+      "id": 2,
+      "name": "12 situps",
+      "description": "",
+      "completed": false,
+      "created_date": "2025-07-24",
+      "reward_xp": 100,
+      "reward_coins": 50
+    },
+    {
+      "id": 3,
+      "name": "Run",
       "description": "",
       "completed": false,
       "created_date": "2025-07-24",
