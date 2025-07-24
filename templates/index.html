@@ -4,49 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo Leveler App</title>
+    <title>Solo Leveler - Ultimate Training System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
+    <div class="app">
         <!-- Header -->
-        <header class="header">
-            <div class="level-info">
-                <span class="level-text">LVL : 5</span>
-                <div class="level-bar">
-                    <div class="level-progress"></div>
+        <div class="header">
+            <div class="level-bar">
+                <span class="level-text">LVL : 1</span>
+                <div class="xp-bar">
+                    <div class="xp-progress"></div>
                 </div>
+                <span class="xp-text">0/100</span>
             </div>
             <div class="player-name">VANSH SHARMA</div>
-            <div class="player-icon">🔷</div>
-        </header>
+            <div class="currency-display">
+                <div class="coins">💰 <span id="coinCount">100</span></div>
+                <div class="energy">⚡ <span id="energyCount">100</span>/100</div>
+            </div>
+        </div>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <div class="main-content" id="mainContent">
             <!-- Daily Tasks Screen -->
-            <div class="screen active" id="daily-tasks">
+            <div class="screen active" id="dailyTasks">
                 <div class="screen-header">
                     <h1>DAILY TASKS</h1>
                     <div class="streak-counter">
-                        <span class="streak-number">0</span>
-                        <span class="streak-text">STREAK</span>
+                        <div class="streak-number">0</div>
+                        <div class="streak-text">STREAK</div>
                     </div>
                 </div>
-                <p class="subtitle">SWIPE LEFT FOR PERSONAL DAILY QUESTS</p>
+                <p class="subtitle">COMPLETE ALL TASKS TO MAINTAIN YOUR STREAK</p>
                 
-                <div class="quest-info-box">
-                    <div class="quest-info-header">
-                        <span class="info-icon">ℹ️</span>
-                        <span class="quest-info-text">QUEST INFO</span>
+                <div class="quest-info-panel">
+                    <div class="panel-header">
+                        <span class="info-icon">⚔️</span>
+                        <span>DAILY QUEST INFO</span>
                     </div>
-                    
-                    <div class="tasks-list" id="tasks-list">
+                    <div class="task-list" id="taskList">
                         <!-- Tasks will be loaded here -->
                     </div>
-                    
-                    <div class="timer-section">
-                        <div class="timer">TIMER: <span id="timer-display">13:59:28</span></div>
-                        <div class="warning">WARNING: FAILURE TO COMPLETE THE DAILY QUEST WILL RESULT IN AN APPROPRIATE PENALTY</div>
+                    <div class="timer">TIME REMAINING: <span id="timerDisplay">04:43:00</span></div>
+                    <div class="warning">
+                        ⚠️ WARNING: FAILURE TO COMPLETE DAILY QUESTS WILL RESET YOUR STREAK ⚠️
                     </div>
                 </div>
             </div>
@@ -55,12 +60,11 @@
             <div class="screen" id="inventory">
                 <div class="screen-header">
                     <h1>INVENTORY</h1>
-                    <div class="inventory-icon">🛒</div>
+                    <div class="inventory-icon">🎒</div>
                 </div>
-                <p class="subtitle">ACHIEVEMENTS AND ITEMS UNLOCKED WILL BE DISPLAYED HERE</p>
-                
-                <div class="empty-state">
-                    <h2>NO ITEMS AVAILABLE YET</h2>
+                <p class="subtitle">YOUR ITEMS AND CONSUMABLES</p>
+                <div class="inventory-grid" id="inventoryGrid">
+                    <!-- Inventory items will be loaded here -->
                 </div>
             </div>
 
@@ -68,12 +72,45 @@
             <div class="screen" id="quests">
                 <div class="screen-header">
                     <h1>QUESTS</h1>
-                    <div class="quest-icon">💎</div>
+                    <div class="leaderboard-btn">LEADER BOARD</div>
                 </div>
-                <p class="subtitle">AVAILABLE QUESTS AND MISSIONS</p>
+                <p class="subtitle">COMPLETE QUESTS TO INCREASE YOUR STATS</p>
                 
-                <div class="empty-state">
-                    <h2>NO QUESTS AVAILABLE</h2>
+                <div class="quest-grid">
+                    <div class="quest-card">
+                        <div class="quest-icon">💪</div>
+                        <div class="quest-name">STRENGTH<br>TRAINING</div>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                        <div class="quest-reward">🏆 200 XP • 💰 100 Coins</div>
+                    </div>
+                    <div class="quest-card">
+                        <div class="quest-icon">🧠</div>
+                        <div class="quest-name">INTELLIGENCE</div>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                        <div class="quest-reward">🏆 200 XP • 💰 100 Coins</div>
+                    </div>
+                    <div class="quest-card">
+                        <div class="quest-icon">🎯</div>
+                        <div class="quest-name">DISCIPLINE</div>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                        <div class="quest-reward">🏆 250 XP • 💰 150 Coins</div>
+                    </div>
+                    <div class="quest-card">
+                        <div class="quest-icon">🧘</div>
+                        <div class="quest-name">SPIRITUAL<br>TRAINING</div>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                        <div class="quest-reward">🏆 220 XP • 💰 120 Coins</div>
+                    </div>
+                    <div class="quest-card wide">
+                        <div class="quest-icon">🔮</div>
+                        <div class="quest-name">SECRET QUESTS</div>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                        <div class="quest-reward">🏆 1000 XP • 💰 500 Coins</div>
+                    </div>
+                    <div class="quest-card wide">
+                        <div class="quest-icon">⚔️</div>
+                        <div class="quest-name">PERSONAL QUESTS<br><span class="quest-count">0 QUESTS REMAINING</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -81,79 +118,119 @@
             <div class="screen" id="status">
                 <div class="screen-header">
                     <h1>STATUS</h1>
-                    <div class="rank-badge">
-                        <span class="rank-letter">E</span>
-                        <div class="rank-info">
-                            <span class="rank-text">RANK</span>
-                            <span class="rank-number">5</span>
-                            <span class="level-text">LEVEL</span>
-                        </div>
-                    </div>
+                    <div class="rank-badge">E</div>
                 </div>
-                <p class="subtitle">YOUR STATS AND RANK</p>
+                <p class="subtitle">YOUR STATS AND ABILITIES</p>
                 
-                <div class="player-info-card">
-                    <div class="player-avatar">📷</div>
+                <div class="player-info">
+                    <div class="avatar">📷</div>
                     <div class="player-details">
-                        <div class="detail-row">NAME : VANSH SHARMA</div>
-                        <div class="detail-row">CLASS : MAGE</div>
-                        <div class="detail-row">TITLE : WOLF SLAYER</div>
+                        <div>NAME : VANSH SHARMA</div>
+                        <div>CLASS : <span id="playerClass">BEGINNER</span></div>
+                        <div>TITLE : <span id="playerTitle">NEWBIE</span></div>
+                    </div>
+                    <div class="level-display">
+                        <div class="level-number">1</div>
+                        <div class="level-text">LEVEL</div>
                     </div>
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-item">
+                    <div class="stat" onclick="app.allocateStat('strength')">
                         <span class="stat-icon">⚔️</span>
-                        <span class="stat-label">STR : 14.75</span>
+                        <span class="stat-name">STR : 10</span>
+                        <span class="stat-add">+</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-icon">💙</span>
-                        <span class="stat-label">VIT : 10</span>
+                    <div class="stat" onclick="app.allocateStat('vitality')">
+                        <span class="stat-icon">💚</span>
+                        <span class="stat-name">VIT : 10</span>
+                        <span class="stat-add">+</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat" onclick="app.allocateStat('agility')">
                         <span class="stat-icon">🏃</span>
-                        <span class="stat-label">AGI : 10</span>
+                        <span class="stat-name">AGI : 10</span>
+                        <span class="stat-add">+</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat" onclick="app.allocateStat('intelligence')">
                         <span class="stat-icon">🧠</span>
-                        <span class="stat-label">INT : 10</span>
+                        <span class="stat-name">INT : 10</span>
+                        <span class="stat-add">+</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat" onclick="app.allocateStat('perception')">
                         <span class="stat-icon">👁️</span>
-                        <span class="stat-label">PER : 10</span>
+                        <span class="stat-name">PER : 10</span>
+                        <span class="stat-add">+</span>
                     </div>
-                    <div class="stat-item ability-points">
-                        <span class="stat-label">AVAILABLE<br>ABILITY<br>POINTS</span>
-                        <span class="stat-number">0</span>
+                    <div class="stat-points">
+                        <div class="plus-icon">📊</div>
+                        <div class="available-text">AVAILABLE<br>ABILITY<br>POINTS</div>
+                        <div class="points-number">0</div>
                     </div>
                 </div>
 
                 <div class="additional-stats">
-                    <div class="stat-row">LEADERBOARD POINTS: 10.0625</div>
-                    <div class="stat-row">PHYSICAL DAMAGE REDUCTION: 5%</div>
-                    <div class="stat-row">MAGICAL DAMAGE REDUCTION: 4%</div>
+                    <div>TOTAL EXPERIENCE: <span id="totalExp">0</span></div>
+                    <div>PHYSICAL DAMAGE REDUCTION: <span id="physDamageRed">0</span>%</div>
+                    <div>MAGICAL DAMAGE REDUCTION: <span id="magDamageRed">0</span>%</div>
+                    <div>MAX STREAK: <span id="maxStreak">0</span> DAYS</div>
                 </div>
             </div>
-        </main>
+
+            <!-- Shop Screen -->
+            <div class="screen" id="shop">
+                <div class="screen-header">
+                    <h1>SHOP</h1>
+                    <div class="shop-icon">🛍️</div>
+                </div>
+                <p class="subtitle">PURCHASE ITEMS TO AID YOUR JOURNEY</p>
+                <div class="shop-grid" id="shopGrid">
+                    <!-- Shop items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Achievements Screen -->
+            <div class="screen" id="achievements">
+                <div class="screen-header">
+                    <h1>ACHIEVEMENTS</h1>
+                    <div class="achievement-icon">🏆</div>
+                </div>
+                <p class="subtitle">YOUR ACCOMPLISHMENTS AND MILESTONES</p>
+                <div class="achievements-list" id="achievementsList">
+                    <!-- Achievements will be loaded here -->
+                </div>
+            </div>
+        </div>
 
         <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <button class="nav-btn active" data-screen="daily-tasks">
-                <span class="nav-icon">💎</span>
-            </button>
-            <button class="nav-btn" data-screen="inventory">
-                <span class="nav-icon">⚔️</span>
-            </button>
-            <button class="nav-btn" data-screen="quests">
-                <span class="nav-icon">💎</span>
-            </button>
-            <button class="nav-btn" data-screen="status">
-                <span class="nav-icon">🔥</span>
-            </button>
-            <button class="nav-btn" data-screen="settings">
-                <span class="nav-icon">⚙️</span>
-            </button>
-        </nav>
+        <div class="bottom-nav">
+            <div class="nav-item active" data-screen="dailyTasks" title="Daily Tasks">
+                <div class="nav-icon">⚔️</div>
+                <div class="nav-label">TASKS</div>
+            </div>
+            <div class="nav-item" data-screen="inventory" title="Inventory">
+                <div class="nav-icon">🎒</div>
+                <div class="nav-label">ITEMS</div>
+            </div>
+            <div class="nav-item" data-screen="quests" title="Quests">
+                <div class="nav-icon">📜</div>
+                <div class="nav-label">QUESTS</div>
+            </div>
+            <div class="nav-item" data-screen="status" title="Status">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">STATUS</div>
+            </div>
+            <div class="nav-item" data-screen="shop" title="Shop">
+                <div class="nav-icon">🛍️</div>
+                <div class="nav-label">SHOP</div>
+            </div>
+            <div class="nav-item" data-screen="achievements" title="Achievements">
+                <div class="nav-icon">🏆</div>
+                <div class="nav-label">GOALS</div>
+            </div>
+        </div>
+
+        <!-- Notification System -->
+        <div class="notification-container" id="notificationContainer"></div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
