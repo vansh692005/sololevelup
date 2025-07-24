@@ -374,9 +374,24 @@ class SoloLevelerApp {
         
         achievementsList.innerHTML = '';
         
-        this.achievements.forEach(achievement => {
+        this.achievements.forEach((achievement, index) => {
             const achievementElement = document.createElement('div');
-            achievementElement.className = `achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}`;
+            const canClaim = achievement.unlocked && !achievement.claimed;
+            const isClaimed = achievement.claimed;
+            
+            achievementElement.className = `achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'} ${canClaim ? 'claimable' : ''} ${isClaimed ? 'claimed' : ''}`;
+            
+            let statusContent = '';
+            if (isClaimed) {
+                statusContent = '<div class="achievement-status claimed">CLAIMED</div>';
+            } else if (canClaim) {
+                statusContent = `<button class="claim-btn" onclick="app.claimAchievement(${index})">CLAIM REWARD</button>`;
+            } else if (achievement.unlocked) {
+                statusContent = '<div class="achievement-status">UNLOCKED</div>';
+            } else {
+                statusContent = '<div class="achievement-status">LOCKED</div>';
+            }
+            
             achievementElement.innerHTML = `
                 <div class="achievement-icon">${achievement.unlocked ? '🏆' : '🔒'}</div>
                 <div class="achievement-info">
@@ -384,7 +399,7 @@ class SoloLevelerApp {
                     <div class="achievement-desc">${achievement.description}</div>
                     <div class="achievement-reward">Reward: 💰 ${achievement.reward_coins}</div>
                 </div>
-                <div class="achievement-status">${achievement.unlocked ? 'UNLOCKED' : 'LOCKED'}</div>
+                ${statusContent}
             `;
             
             achievementsList.appendChild(achievementElement);
@@ -505,6 +520,30 @@ class SoloLevelerApp {
         }
     }
     
+    async claimAchievement(achievementIndex) {
+        try {
+            const response = await fetch('/api/claim-achievement', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ achievement_index: achievementIndex })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                await this.loadPlayerData();
+                await this.loadAchievements();
+                this.showNotification(`Achievement claimed! +${result.coins_awarded} coins!`);
+                this.addRewardClaimEffect();
+            } else {
+                this.showNotification(result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error claiming achievement:', error);
+        }
+    }
+    
     updateStreak() {
         const streakNumber = document.querySelector('.streak-number');
         if (streakNumber) {
@@ -594,6 +633,44 @@ class SoloLevelerApp {
                 { transform: `translateY(-${150 + Math.random() * 100}px) scale(0)`, opacity: 0 }
             ], {
                 duration: 1500 + Math.random() * 500,
+                easing: 'ease-out'
+            }).onfinish = () => {
+                if (document.body.contains(particle)) {
+                    document.body.removeChild(particle);
+                }
+            };
+        }
+    }
+    
+    addRewardClaimEffect() {
+        // Create golden particle effect for achievement reward claiming
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'reward-particle';
+            particle.style.cssText = `
+                position: fixed;
+                width: 8px;
+                height: 8px;
+                background: #f4d03f;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+                box-shadow: 0 0 20px #f4d03f;
+            `;
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = window.innerHeight * 0.5;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            document.body.appendChild(particle);
+            
+            particle.animate([
+                { transform: 'translateY(0px) scale(1)', opacity: 1 },
+                { transform: `translateY(-${200 + Math.random() * 150}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 2000 + Math.random() * 1000,
                 easing: 'ease-out'
             }).onfinish = () => {
                 if (document.body.contains(particle)) {

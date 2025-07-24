@@ -258,28 +258,28 @@ def check_achievements(data):
     # First Steps
     if not achievements[0]["unlocked"] and any(task["completed"] for task in data["daily_tasks"]):
         achievements[0]["unlocked"] = True
-        player["coins"] += achievements[0]["reward_coins"]
+        # Don't auto-award coins anymore - require manual claiming
     
     # Dedication (7-day streak)
     if not achievements[1]["unlocked"] and player["streak"] >= 7:
         achievements[1]["unlocked"] = True
-        player["coins"] += achievements[1]["reward_coins"]
+        # Don't auto-award coins anymore - require manual claiming
     
     # Level Up (level 5)
     if not achievements[2]["unlocked"] and player["level"] >= 5:
         achievements[2]["unlocked"] = True
-        player["coins"] += achievements[2]["reward_coins"]
+        # Don't auto-award coins anymore - require manual claiming
     
     # Quest Master (5 completed quests)
     completed_quests = sum(1 for quest in data["quests"].values() if isinstance(quest, dict) and quest.get("completed", False))
     if not achievements[3]["unlocked"] and completed_quests >= 5:
         achievements[3]["unlocked"] = True
-        player["coins"] += achievements[3]["reward_coins"]
+        # Don't auto-award coins anymore - require manual claiming
     
     # Unstoppable (30-day streak)
     if not achievements[4]["unlocked"] and player["streak"] >= 30:
         achievements[4]["unlocked"] = True
-        player["coins"] += achievements[4]["reward_coins"]
+        # Don't auto-award coins anymore - require manual claiming
 
 # Initialize game data
 game_data = load_game_data()
@@ -417,6 +417,23 @@ def use_item():
         return jsonify({"success": True})
     
     return jsonify({"success": False, "error": "Item not available"})
+
+@app.route('/api/claim-achievement', methods=['POST'])
+def claim_achievement():
+    achievement_index = request.json.get('achievement_index')
+    if 0 <= achievement_index < len(game_data["achievements"]):
+        achievement = game_data["achievements"][achievement_index]
+        if achievement["unlocked"] and not achievement.get("claimed", False):
+            # Mark as claimed and award coins
+            achievement["claimed"] = True
+            game_data["player"]["coins"] += achievement["reward_coins"]
+            
+            save_game_data(game_data)
+            return jsonify({"success": True, "coins_awarded": achievement["reward_coins"]})
+        else:
+            return jsonify({"success": False, "error": "Achievement not available for claiming"})
+    
+    return jsonify({"success": False, "error": "Invalid achievement"})
 
 @app.route('/api/update-timer', methods=['POST'])
 def update_timer():

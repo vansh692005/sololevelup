@@ -774,6 +774,50 @@ body {
     color: #cccccc;
 }
 
+.achievement-item.claimable {
+    background: rgba(244, 208, 63, 0.1);
+    border-color: rgba(244, 208, 63, 0.5);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.achievement-item.claimed {
+    opacity: 0.8;
+    background: rgba(125, 125, 232, 0.05);
+}
+
+.claim-btn {
+    background: linear-gradient(135deg, #f4d03f, #f39c12);
+    color: #2c3e50;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(244, 208, 63, 0.3);
+}
+
+.claim-btn:hover {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 208, 63, 0.5);
+}
+
+.achievement-status.claimed {
+    background: #27ae60;
+    color: white;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 4px 20px rgba(244, 208, 63, 0.3);
+    }
+    to {
+        box-shadow: 0 4px 30px rgba(244, 208, 63, 0.6);
+    }
+}
+
 /* Bottom Navigation */
 .bottom-nav {
     display: flex;
