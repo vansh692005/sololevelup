@@ -186,6 +186,9 @@ class SoloLevelerApp {
         if (magDamageRed) magDamageRed.textContent = this.playerData.magical_damage_reduction;
         if (maxStreak) maxStreak.textContent = this.playerData.max_streak;
         
+        // Update rank display
+        this.updateRankDisplay();
+        
         // Update stats
         this.updateStatsDisplay();
     }
@@ -207,6 +210,56 @@ class SoloLevelerApp {
         });
         
         if (pointsNumber) pointsNumber.textContent = stats.available_points;
+    }
+    
+    updateRankDisplay() {
+        if (!this.playerData) return;
+        
+        const rankBadge = document.getElementById('rankBadge');
+        const rankName = document.getElementById('rankName');
+        const rankScore = document.getElementById('rankScore');
+        const rankProgress = document.getElementById('rankProgress');
+        const rankProgressFill = document.getElementById('rankProgressFill');
+        
+        if (rankBadge) {
+            rankBadge.textContent = this.playerData.rank || 'E';
+            rankBadge.className = `rank-badge rank-${(this.playerData.rank || 'E').toLowerCase()}`;
+        }
+        
+        if (rankName) rankName.textContent = this.playerData.rank_name || 'AWAKENED';
+        if (rankScore) rankScore.textContent = this.playerData.rank_score || 0;
+        
+        if (rankProgress && this.playerData.points_to_next_rank !== null) {
+            if (this.playerData.points_to_next_rank === null) {
+                rankProgress.textContent = 'MAX RANK ACHIEVED';
+            } else {
+                rankProgress.textContent = `${this.playerData.points_to_next_rank} points to next rank`;
+            }
+        }
+        
+        if (rankProgressFill) {
+            const score = this.playerData.rank_score || 0;
+            const pointsToNext = this.playerData.points_to_next_rank;
+            
+            if (pointsToNext === null) {
+                rankProgressFill.style.width = '100%';
+            } else {
+                // Calculate progress within current rank
+                const rankThresholds = [0, 200, 400, 600, 800, 1000];
+                const currentRankIndex = rankThresholds.findIndex(threshold => score < threshold) - 1;
+                const currentThreshold = rankThresholds[Math.max(0, currentRankIndex)];
+                const nextThreshold = rankThresholds[currentRankIndex + 1];
+                
+                if (nextThreshold) {
+                    const progressInRank = score - currentThreshold;
+                    const totalRankPoints = nextThreshold - currentThreshold;
+                    const progressPercent = (progressInRank / totalRankPoints) * 100;
+                    rankProgressFill.style.width = `${Math.max(0, progressPercent)}%`;
+                } else {
+                    rankProgressFill.style.width = '100%';
+                }
+            }
+        }
     }
     
     renderTasks() {

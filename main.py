@@ -20,6 +20,9 @@ DEFAULT_GAME_DATA = {
         "class": "BEGINNER",
         "title": "NEWBIE",
         "rank": "E",
+        "rank_name": "AWAKENED",
+        "rank_score": 0,
+        "points_to_next_rank": 200,
         "total_experience": 0,
         "stats": {
             "strength": 10,
@@ -150,6 +153,63 @@ def award_experience(data, xp_amount):
         update_class_and_title(data)
         check_achievements(data)
 
+def calculate_rank_score(data):
+    """Calculate rank score based on player progress"""
+    player = data["player"]
+    stats = player["stats"]
+    
+    # Calculate total stats (excluding available_points)
+    total_stats = sum(value for key, value in stats.items() if key != "available_points")
+    
+    # Rank Score Calculation:
+    # Level × 10 points
+    # Total Stats × 2 points
+    # Max Streak × 5 points
+    # Total XP ÷ 100 points
+    score = (
+        player["level"] * 10 +
+        total_stats * 2 +
+        player["max_streak"] * 5 +
+        player["total_experience"] // 100
+    )
+    
+    return score
+
+def get_rank_from_score(score):
+    """Get rank letter and name based on score"""
+    if score >= 1000:
+        return "S", "SHADOW MONARCH"
+    elif score >= 800:
+        return "A", "ELITE HUNTER"
+    elif score >= 600:
+        return "B", "SKILLED HUNTER"
+    elif score >= 400:
+        return "C", "TRAINED HUNTER"
+    elif score >= 200:
+        return "D", "NOVICE HUNTER"
+    else:
+        return "E", "AWAKENED"
+
+def update_rank(data):
+    """Update player rank based on current progress"""
+    score = calculate_rank_score(data)
+    rank_letter, rank_name = get_rank_from_score(score)
+    
+    data["player"]["rank"] = rank_letter
+    data["player"]["rank_name"] = rank_name
+    data["player"]["rank_score"] = score
+    
+    # Calculate points to next rank
+    next_thresholds = [200, 400, 600, 800, 1000]
+    points_to_next = None
+    
+    for threshold in next_thresholds:
+        if score < threshold:
+            points_to_next = threshold - score
+            break
+    
+    data["player"]["points_to_next_rank"] = points_to_next
+
 def update_class_and_title(data):
     """Update player class and title based on level and stats"""
     level = data["player"]["level"]
@@ -186,6 +246,9 @@ def update_class_and_title(data):
         data["player"]["title"] = "VETERAN"
     elif data["player"]["level"] >= 5:
         data["player"]["title"] = "RISING STAR"
+    
+    # Update rank
+    update_rank(data)
 
 def check_achievements(data):
     """Check and unlock achievements"""
