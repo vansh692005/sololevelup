@@ -1,5 +1,4 @@
-
-/* Reset and Base Styles */
+/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -8,10 +7,50 @@
 
 body {
     font-family: 'Orbitron', monospace;
-    background: linear-gradient(135deg, #000012 0%, #1a0033 50%, #000012 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
     color: #ffffff;
     overflow: hidden;
     height: 100vh;
+}
+
+/* Premium Logo */
+.premium-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+    background: linear-gradient(135deg, #f4d03f, #f39c12, #e67e22);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+.logo-icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+    filter: drop-shadow(0 0 10px #f4d03f);
+}
+
+.logo-text {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.logo-subtitle {
+    font-size: 8px;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+@keyframes logoGlow {
+    0% {
+        filter: drop-shadow(0 0 5px rgba(244, 208, 63, 0.5));
+    }
+    100% {
+        filter: drop-shadow(0 0 20px rgba(244, 208, 63, 0.8));
+    }
 }
 
 /* App Container */
@@ -24,14 +63,15 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(135deg, rgba(125, 125, 232, 0.2) 0%, rgba(125, 125, 232, 0.05) 100%);
-    backdrop-filter: blur(10px);
-    border-bottom: 2px solid rgba(125, 125, 232, 0.3);
-    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(125, 125, 232, 0.3);
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(125, 125, 232, 0.2);
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .level-bar {
@@ -829,7 +869,8 @@ body {
     margin-bottom: 5px;
 }
 
-.rank-progress {
+.Generating rest of the CSS styles for the leaderboard and other components.```text
+rank-progress {
     color: #aaaaaa;
     font-size: 12px;
 }
@@ -1111,27 +1152,27 @@ body {
     .header {
         padding: 12px 15px;
     }
-    
+
     .main-content {
         padding: 15px;
     }
-    
+
     .quest-grid, .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .quest-card.wide {
         grid-column: span 1;
     }
-    
+
     .inventory-grid, .shop-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
-    
+
     .nav-label {
         font-size: 7px;
     }
-    
+
     .nav-icon {
         font-size: 18px;
     }
@@ -1141,17 +1182,93 @@ body {
     .app {
         font-size: 14px;
     }
-    
+
     .player-name {
         font-size: 16px;
     }
-    
+
     .screen-header h1 {
         font-size: 20px;
     }
-    
+
     .currency-display {
         gap: 10px;
         font-size: 12px;
     }
+}
+
+/* Leaderboard Styles */
+.leaderboard-container {
+    background: rgba(125, 125, 232, 0.1);
+    border: 2px solid rgba(125, 125, 232, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.leaderboard-header {
+    font-size: 20px;
+    font-weight: 900;
+    color: #7d7de8;
+    text-shadow: 0 0 15px rgba(125, 125, 232, 0.8);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(125, 125, 232, 0.2);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-item:hover {
+    background: rgba(125, 125, 232, 0.1);
+    border-color: rgba(125, 125, 232, 0.4);
+    box-shadow: 0 4px 20px rgba(125, 125, 232, 0.3);
+}
+
+.leaderboard-rank {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    width: 30px;
+    text-align: center;
+}
+
+.leaderboard-name {
+    font-weight: 600;
+    color: #7d7de8;
+    flex: 1;
+    margin-left: 10px;
+}
+
+.leaderboard-level {
+    color: #cccccc;
+    font-size: 14px;
+    width: 50px;
+    text-align: center;
+}
+
+/* Add more styles as needed for effects */
+/* Example premium leaderboard entry */
+.leaderboard-item.premium {
+    background: linear-gradient(135deg, rgba(244, 208, 63, 0.1) 0%, rgba(244, 208, 63, 0.05) 100%);
+    border: 1px solid rgba(244, 208, 63, 0.3);
+    box-shadow: 0 4px 20px rgba(244, 208, 63, 0.3);
+}
+
+.leaderboard-item.premium .leaderboard-name {
+    color: #f4d03f;
+    text-shadow: 0 0 10px rgba(244, 208, 63, 0.8);
 }

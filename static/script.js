@@ -144,6 +144,16 @@ class SoloLevelerApp {
             console.error('Error loading achievements:', error);
         }
     }
+
+    async loadLeaderboard() {
+        try {
+            const response = await fetch('/api/leaderboard');
+            this.leaderboard = await response.json();
+            this.renderLeaderboard();
+        } catch (error) {
+            console.error('Error loading leaderboard:', error);
+        }
+    }
     
     loadScreenData(screenName) {
         switch(screenName) {
@@ -816,6 +826,61 @@ class SoloLevelerApp {
             console.error('Error deleting personal quest:', error);
             this.showNotification('Failed to delete quest', 'error');
         }
+    }
+
+    renderLeaderboard() {
+        const leaderboardList = document.getElementById('leaderboardList');
+        const currentRank = document.getElementById('currentRank');
+        const totalPlayers = document.getElementById('totalPlayers');
+        
+        if (!leaderboardList || !this.leaderboard) return;
+        
+        // Update stats
+        if (currentRank) currentRank.textContent = `#${this.leaderboard.current_player_position}`;
+        if (totalPlayers) totalPlayers.textContent = this.leaderboard.total_players;
+        
+        leaderboardList.innerHTML = '';
+        
+        this.leaderboard.players.forEach((player, index) => {
+            const isCurrentPlayer = player.name === this.playerData.name;
+            const entryElement = document.createElement('div');
+            entryElement.className = `leaderboard-entry ${isCurrentPlayer ? 'current-player' : ''} ${index < 3 ? 'top-three' : ''}`;
+            
+            let positionDisplay = '';
+            if (index === 0) positionDisplay = '🥇';
+            else if (index === 1) positionDisplay = '🥈';
+            else if (index === 2) positionDisplay = '🥉';
+            else positionDisplay = `#${player.position}`;
+            
+            entryElement.innerHTML = `
+                <div class="position">${positionDisplay}</div>
+                <div class="player-info">
+                    <div class="player-name">${player.name} ${isCurrentPlayer ? '(YOU)' : ''}</div>
+                    <div class="player-details">
+                        <span class="level">LVL ${player.level}</span>
+                        <span class="class">${player.class}</span>
+                        <span class="rank rank-${player.rank.toLowerCase()}">${player.rank}</span>
+                    </div>
+                </div>
+                <div class="player-stats">
+                    <div class="experience">${player.total_experience.toLocaleString()} XP</div>
+                    <div class="streak">${player.max_streak} Days</div>
+                </div>
+            `;
+            
+            leaderboardList.appendChild(entryElement);
+        });
+    }
+
+    showLeaderboard() {
+        this.loadLeaderboard();
+        document.getElementById('quests').classList.remove('active');
+        document.getElementById('leaderboard').classList.add('active');
+    }
+
+    hideLeaderboard() {
+        document.getElementById('leaderboard').classList.remove('active');
+        document.getElementById('quests').classList.add('active');
     }
 }
 

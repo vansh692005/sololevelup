@@ -568,6 +568,59 @@ def get_stats():
         "quests_completed": sum(1 for quest in game_data["quests"].values() if isinstance(quest, dict) and quest.get("completed", False))
     })
 
+@app.route('/api/leaderboard')
+def get_leaderboard():
+    """Get leaderboard data with top players"""
+    # For demo purposes, create sample leaderboard data
+    # In a real app, this would query a database of all players
+    current_player = game_data["player"]
+    
+    # Create sample players for demonstration
+    sample_players = [
+        {
+            "name": current_player["name"],
+            "level": current_player["level"],
+            "total_experience": current_player["total_experience"],
+            "rank": current_player["rank"],
+            "class": current_player["class"],
+            "max_streak": current_player["max_streak"],
+            "rank_score": calculate_rank_score(game_data)
+        }
+    ]
+    
+    # Add some sample competitors
+    competitors = [
+        {"name": "SHADOW KING", "level": 25, "total_experience": 15000, "rank": "S", "class": "ARCHMAGE", "max_streak": 45, "rank_score": 1250},
+        {"name": "LIGHTNING HUNTER", "level": 22, "total_experience": 12000, "rank": "A", "class": "ASSASSIN", "max_streak": 35, "rank_score": 980},
+        {"name": "IRON FIST", "level": 20, "total_experience": 10000, "rank": "A", "class": "BERSERKER", "max_streak": 30, "rank_score": 850},
+        {"name": "MYSTIC SAGE", "level": 18, "total_experience": 8500, "rank": "B", "class": "MAGE", "max_streak": 28, "rank_score": 720},
+        {"name": "STORM BLADE", "level": 16, "total_experience": 7000, "rank": "B", "class": "WARRIOR", "max_streak": 25, "rank_score": 650},
+        {"name": "VOID WALKER", "level": 14, "total_experience": 5500, "rank": "C", "class": "ROGUE", "max_streak": 20, "rank_score": 580},
+        {"name": "EARTH GUARDIAN", "level": 12, "total_experience": 4000, "rank": "C", "class": "TANK", "max_streak": 15, "rank_score": 450},
+        {"name": "WIND RUNNER", "level": 10, "total_experience": 3000, "rank": "D", "class": "SCOUT", "max_streak": 12, "rank_score": 350},
+        {"name": "FIRE STARTER", "level": 8, "total_experience": 2000, "rank": "D", "class": "FIGHTER", "max_streak": 10, "rank_score": 280},
+        {"name": "ICE BREAKER", "level": 6, "total_experience": 1200, "rank": "E", "class": "BEGINNER", "max_streak": 8, "rank_score": 180}
+    ]
+    
+    # Add current player to the list
+    all_players = sample_players + competitors
+    
+    # Sort by total experience (descending)
+    all_players.sort(key=lambda x: x["total_experience"], reverse=True)
+    
+    # Add position numbers
+    for i, player in enumerate(all_players):
+        player["position"] = i + 1
+    
+    # Find current player position
+    current_player_position = next((p["position"] for p in all_players if p["name"] == current_player["name"]), 1)
+    
+    return jsonify({
+        "players": all_players[:10],  # Top 10
+        "current_player_position": current_player_position,
+        "total_players": len(all_players)
+    })
+
 # Legacy endpoint for compatibility with existing frontend
 @app.route('/api/daily_tasks')
 def get_daily_tasks_legacy():

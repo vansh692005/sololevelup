@@ -13,6 +13,11 @@
     <div class="app">
         <!-- Header -->
         <div class="header">
+            <div class="premium-logo">
+                <div class="logo-icon">👑</div>
+                <div class="logo-text">SOLO LEVELER</div>
+                <div class="logo-subtitle">ULTIMATE</div>
+            </div>
             <div class="level-bar">
                 <span class="level-text">LVL : 1</span>
                 <div class="xp-bar">
@@ -71,7 +76,7 @@
             <div class="screen" id="quests">
                 <div class="screen-header">
                     <h1>QUESTS</h1>
-                    <div class="leaderboard-btn">LEADER BOARD</div>
+                    <div class="leaderboard-btn" onclick="app.showLeaderboard()">LEADER BOARD</div>
                 </div>
                 <p class="subtitle">COMPLETE QUESTS TO INCREASE YOUR STATS</p>
 
@@ -208,6 +213,32 @@
                 <div class="achievements-list" id="achievementsList">
                     <!-- Achievements will be loaded here -->
                 </div>
+            </div>
+
+            <!-- Leaderboard Screen -->
+            <div class="screen" id="leaderboard">
+                <div class="screen-header">
+                    <h1>LEADERBOARD</h1>
+                    <div class="leaderboard-icon">👑</div>
+                </div>
+                <p class="subtitle">TOP HUNTERS WORLDWIDE</p>
+                
+                <div class="leaderboard-stats">
+                    <div class="current-rank">
+                        <div class="rank-label">YOUR RANK</div>
+                        <div class="rank-number" id="currentRank">#1</div>
+                    </div>
+                    <div class="total-players">
+                        <div class="players-label">TOTAL HUNTERS</div>
+                        <div class="players-number" id="totalPlayers">10</div>
+                    </div>
+                </div>
+
+                <div class="leaderboard-list" id="leaderboardList">
+                    <!-- Leaderboard entries will be loaded here -->
+                </div>
+                
+                <button class="back-btn" onclick="app.hideLeaderboard()">BACK TO QUESTS</button>
             </div>
         </div>
 
