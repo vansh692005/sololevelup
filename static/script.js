@@ -96,8 +96,18 @@ class SoloLevelerApp {
             });
             
             if (response.ok) {
+                // Add completion animation to the task
+                const taskElement = document.querySelector(`[data-task-id="${taskId}"]`).closest('.task-item');
+                if (taskElement) {
+                    taskElement.classList.add('completed-animation');
+                    setTimeout(() => {
+                        taskElement.classList.remove('completed-animation');
+                    }, 1000);
+                }
+                
                 await this.loadDailyTasks();
                 this.addGlowEffect();
+                this.createParticleEffect();
             }
         } catch (error) {
             console.error('Error toggling task:', error);
@@ -132,6 +142,13 @@ class SoloLevelerApp {
         const timerDisplay = document.getElementById('timer-display');
         if (timerDisplay) {
             timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Add warning class when time is running low (less than 2 hours)
+            if (hours < 2) {
+                timerDisplay.classList.add('warning');
+            } else {
+                timerDisplay.classList.remove('warning');
+            }
         }
     }
     
@@ -141,7 +158,43 @@ class SoloLevelerApp {
             questInfoBox.classList.add('glow');
             setTimeout(() => {
                 questInfoBox.classList.remove('glow');
-            }, 1000);
+            }, 2000);
+        }
+    }
+    
+    createParticleEffect() {
+        // Create floating particles for task completion
+        for (let i = 0; i < 5; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: #7d7de8;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+                box-shadow: 0 0 10px #7d7de8;
+            `;
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = window.innerHeight * 0.7;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            document.body.appendChild(particle);
+            
+            // Animate particle
+            particle.animate([
+                { transform: 'translateY(0px) scale(1)', opacity: 1 },
+                { transform: `translateY(-${100 + Math.random() * 100}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 1000 + Math.random() * 500,
+                easing: 'ease-out'
+            }).onfinish = () => {
+                document.body.removeChild(particle);
+            };
         }
     }
     
