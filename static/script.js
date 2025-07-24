@@ -107,8 +107,21 @@ class SoloLevelerApp {
             const response = await fetch('/api/quests');
             this.quests = await response.json();
             this.renderQuests();
+            
+            // Load personal quests
+            await this.loadPersonalQuests();
         } catch (error) {
             console.error('Error loading quests:', error);
+        }
+    }
+    
+    async loadPersonalQuests() {
+        try {
+            const response = await fetch('/api/personal-quests');
+            this.personalQuests = await response.json();
+            this.renderPersonalQuests();
+        } catch (error) {
+            console.error('Error loading personal quests:', error);
         }
     }
     
@@ -677,6 +690,131 @@ class SoloLevelerApp {
                     document.body.removeChild(particle);
                 }
             };
+        }
+    }
+    
+    renderPersonalQuests() {
+        const personalQuestsList = document.getElementById('personalQuestsList');
+        if (!personalQuestsList) return;
+        
+        personalQuestsList.innerHTML = '';
+        
+        if (!this.personalQuests || this.personalQuests.length === 0) {
+            personalQuestsList.innerHTML = '<div class="empty-message">NO PERSONAL QUESTS YET</div>';
+            return;
+        }
+        
+        this.personalQuests.forEach(quest => {
+            const questElement = document.createElement('div');
+            questElement.className = `personal-quest-item ${quest.completed ? 'completed' : ''}`;
+            
+            questElement.innerHTML = `
+                <div class="quest-info">
+                    <div class="quest-title">${quest.name}</div>
+                    <div class="quest-desc">${quest.description}</div>
+                    <div class="quest-reward">+${quest.reward_xp} XP • +${quest.reward_coins} 💰</div>
+                    <div class="quest-date">Created: ${quest.created_date}</div>
+                </div>
+                <div class="quest-actions">
+                    ${quest.completed 
+                        ? '<div class="quest-status completed">COMPLETED</div>' 
+                        : `<button class="complete-quest-btn" onclick="app.completePersonalQuest(${quest.id})">COMPLETE</button>`
+                    }
+                    <button class="delete-quest-btn" onclick="app.deletePersonalQuest(${quest.id})">DELETE</button>
+                </div>
+            `;
+            
+            personalQuestsList.appendChild(questElement);
+        });
+    }
+    
+    async addPersonalQuest() {
+        const questName = document.getElementById('newQuestName').value.trim();
+        const questDescription = document.getElementById('newQuestDescription').value.trim();
+        
+        if (!questName) {
+            this.showNotification('Quest name is required', 'error');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/add-personal-quest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    name: questName, 
+                    description: questDescription 
+                })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('newQuestName').value = '';
+                document.getElementById('newQuestDescription').value = '';
+                await this.loadPersonalQuests();
+                await this.loadQuests(); // Refresh quest count
+                this.showNotification('Personal quest added!');
+            } else {
+                this.showNotification(result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error adding personal quest:', error);
+            this.showNotification('Failed to add quest', 'error');
+        }
+    }
+    
+    async completePersonalQuest(questId) {
+        try {
+            const response = await fetch('/api/complete-personal-quest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ quest_id: questId })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                await this.loadPersonalQuests();
+                await this.loadQuests(); // Refresh quest count
+                await this.loadPlayerData();
+                this.showNotification(`Quest completed! +${result.rewards.xp} XP +${result.rewards.coins} coins!`);
+            } else {
+                this.showNotification(result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error completing personal quest:', error);
+            this.showNotification('Failed to complete quest', 'error');
+        }
+    }
+    
+    async deletePersonalQuest(questId) {
+        if (!confirm('Are you sure you want to delete this quest?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/delete-personal-quest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ quest_id: questId })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                await this.loadPersonalQuests();
+                await this.loadQuests(); // Refresh quest count
+                this.showNotification('Quest deleted!');
+            } else {
+                this.showNotification(result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting personal quest:', error);
+            this.showNotification('Failed to delete quest', 'error');
         }
     }
 }

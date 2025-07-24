@@ -61,6 +61,7 @@ DEFAULT_GAME_DATA = {
         "secret_quests": {"progress": 0, "max": 100, "completed": False, "reward_coins": 500, "reward_xp": 1000},
         "personal_quests": 0
     },
+    "personal_quest_list": [],
     "achievements": [
         {"name": "First Steps", "description": "Complete your first daily task", "unlocked": False, "reward_coins": 50},
         {"name": "Dedication", "description": "Maintain a 7-day streak", "unlocked": False, "reward_coins": 200},
@@ -104,13 +105,30 @@ def check_daily_reset(data):
     """Check if daily tasks need to be reset"""
     today = datetime.now().strftime("%Y-%m-%d")
     if data.get("last_reset") != today:
-        # Reset daily tasks
+        # Check if all tasks were completed yesterday
+        all_completed = all(task["completed"] for task in data["daily_tasks"])
+        
+        # Reset streak if not all tasks completed
+        if not all_completed:
+            data["player"]["streak"] = 0
+        
+        # Calculate progressive difficulty based on streak
+        streak = data["player"]["streak"]
+        pushup_count = 12 + (streak * 2)  # Start at 12, increase by 2 each day
+        situp_count = 12 + (streak * 2)   # Start at 12, increase by 2 each day
+        
+        # Reset daily tasks with progressive difficulty
         for task in data["daily_tasks"]:
-            if not task["completed"]:
-                # Penalty for incomplete tasks
-                data["player"]["streak"] = 0
             task["completed"] = False
             task["progress"] = 0
+            
+            # Update pushups and situps with progressive difficulty
+            if "PUSHUPS" in task["name"]:
+                task["name"] = f"{pushup_count} PUSHUPS"
+                task["max"] = pushup_count
+            elif "SITUPS" in task["name"]:
+                task["name"] = f"{situp_count} SITUPS"
+                task["max"] = situp_count
         
         # Reset timer
         data["timer"] = {"hours": 4, "minutes": 43, "seconds": 0}
@@ -447,6 +465,94 @@ def update_timer():
         game_data["timer"]["hours"] -= 1
         game_data["timer"]["minutes"] = 59
         game_data["timer"]["seconds"] = 59
+    
+    save_game_data(game_data)
+    return jsonify({"success": True})
+
+@app.route('/api/personal-quests')
+def get_personal_quests():
+    """Get personal quests"""
+    if "personal_quest_list" not in game_data:
+        game_data["personal_quest_list"] = []
+    return jsonify(game_data["personal_quest_list"])
+
+@app.route('/api/add-personal-quest', methods=['POST'])
+def add_personal_quest():
+    """Add a new personal quest"""
+    quest_data = request.json
+    quest_name = quest_data.get('name', '').strip()
+    quest_description = quest_data.get('description', '').strip()
+    
+    if not quest_name:
+        return jsonify({"success": False, "error": "Quest name is required"})
+    
+    if "personal_quest_list" not in game_data:
+        game_data["personal_quest_list"] = []
+    
+    new_quest = {
+        "id": len(game_data["personal_quest_list"]) + 1,
+        "name": quest_name,
+        "description": quest_description,
+        "completed": False,
+        "created_date": datetime.now().strftime("%Y-%m-%d"),
+        "reward_xp": 100,
+        "reward_coins": 50
+    }
+    
+    game_data["personal_quest_list"].append(new_quest)
+    game_data["quests"]["personal_quests"] = len([q for q in game_data["personal_quest_list"] if not q["completed"]])
+    
+    save_game_data(game_data)
+    return jsonify({"success": True, "quest": new_quest})
+
+@app.route('/api/complete-personal-quest', methods=['POST'])
+def complete_personal_quest():
+    """Complete a personal quest"""
+    quest_id = request.json.get('quest_id')
+    
+    if "personal_quest_list" not in game_data:
+        return jsonify({"success": False, "error": "No personal quests found"})
+    
+    quest = next((q for q in game_data["personal_quest_list"] if q["id"] == quest_id), None)
+    
+    if not quest:
+        return jsonify({"success": False, "error": "Quest not found"})
+    
+    if quest["completed"]:
+        return jsonify({"success": False, "error": "Quest already completed"})
+    
+    quest["completed"] = True
+    quest["completion_date"] = datetime.now().strftime("%Y-%m-%d")
+    
+    # Award rewards
+    award_experience(game_data, quest["reward_xp"])
+    game_data["player"]["coins"] += quest["reward_coins"]
+    
+    # Update personal quests count
+    game_data["quests"]["personal_quests"] = len([q for q in game_data["personal_quest_list"] if not q["completed"]])
+    
+    check_achievements(game_data)
+    save_game_data(game_data)
+    
+    return jsonify({"success": True, "rewards": {"xp": quest["reward_xp"], "coins": quest["reward_coins"]}})
+
+@app.route('/api/delete-personal-quest', methods=['POST'])
+def delete_personal_quest():
+    """Delete a personal quest"""
+    quest_id = request.json.get('quest_id')
+    
+    if "personal_quest_list" not in game_data:
+        return jsonify({"success": False, "error": "No personal quests found"})
+    
+    quest_index = next((i for i, q in enumerate(game_data["personal_quest_list"]) if q["id"] == quest_id), None)
+    
+    if quest_index is None:
+        return jsonify({"success": False, "error": "Quest not found"})
+    
+    game_data["personal_quest_list"].pop(quest_index)
+    
+    # Update personal quests count
+    game_data["quests"]["personal_quests"] = len([q for q in game_data["personal_quest_list"] if not q["completed"]])
     
     save_game_data(game_data)
     return jsonify({"success": True})

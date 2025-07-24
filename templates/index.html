@@ -107,9 +107,20 @@
                         <div class="quest-reward">🏆 1000 XP • 💰 500 Coins</div>
                     </div>
                     <div class="quest-card wide">
-                        <div class="quest-icon">⚔️</div>
-                        <div class="quest-name">PERSONAL QUESTS<br><span class="quest-count">0 QUESTS REMAINING</span></div>
+                        <div class="quest-icon">⭐</div>
+                        <div class="quest-name">PERSONAL QUESTS</div>
+                        <div class="quest-count">0 QUESTS REMAINING</div>
                     </div>
+                </div>
+
+                <div class="personal-quests-section">
+                    <h2>PERSONAL QUESTS</h2>
+                    <div class="add-quest-form">
+                        <input type="text" id="newQuestName" placeholder="Quest Name" maxlength="50">
+                        <textarea id="newQuestDescription" placeholder="Quest Description (optional)" maxlength="200"></textarea>
+                        <button onclick="app.addPersonalQuest()" class="add-quest-btn">ADD QUEST</button>
+                    </div>
+                    <div id="personalQuestsList" class="personal-quests-list"></div>
                 </div>
             </div>
 
