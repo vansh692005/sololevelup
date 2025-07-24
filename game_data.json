@@ -115,7 +115,7 @@
       "reward_coins": 500,
       "reward_xp": 1000
     },
-    "personal_quests": 0
+    "personal_quests": 1
   },
   "achievements": [
     {
@@ -181,5 +181,16 @@
     "sound_effects": true,
     "dark_mode": true,
     "daily_reset_time": "00:00"
-  }
+  },
+  "personal_quest_list": [
+    {
+      "id": 1,
+      "name": "Do 2 pushups more",
+      "description": "",
+      "completed": false,
+      "created_date": "2025-07-24",
+      "reward_xp": 100,
+      "reward_coins": 50
+    }
+  ]
 }
