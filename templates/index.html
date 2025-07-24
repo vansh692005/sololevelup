@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveler App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="level-info">
+                <span class="level-text">LVL : 5</span>
+                <div class="level-bar">
+                    <div class="level-progress"></div>
+                </div>
+            </div>
+            <div class="player-name">VANSH SHARMA</div>
+            <div class="player-icon">🔷</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Daily Tasks Screen -->
+            <div class="screen active" id="daily-tasks">
+                <div class="screen-header">
+                    <h1>DAILY TASKS</h1>
+                    <div class="streak-counter">
+                        <span class="streak-number">0</span>
+                        <span class="streak-text">STREAK</span>
+                    </div>
+                </div>
+                <p class="subtitle">SWIPE LEFT FOR PERSONAL DAILY QUESTS</p>
+                
+                <div class="quest-info-box">
+                    <div class="quest-info-header">
+                        <span class="info-icon">ℹ️</span>
+                        <span class="quest-info-text">QUEST INFO</span>
+                    </div>
+                    
+                    <div class="tasks-list" id="tasks-list">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                    
+                    <div class="timer-section">
+                        <div class="timer">TIMER: <span id="timer-display">13:59:28</span></div>
+                        <div class="warning">WARNING: FAILURE TO COMPLETE THE DAILY QUEST WILL RESULT IN AN APPROPRIATE PENALTY</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Screen -->
+            <div class="screen" id="inventory">
+                <div class="screen-header">
+                    <h1>INVENTORY</h1>
+                    <div class="inventory-icon">🛒</div>
+                </div>
+                <p class="subtitle">ACHIEVEMENTS AND ITEMS UNLOCKED WILL BE DISPLAYED HERE</p>
+                
+                <div class="empty-state">
+                    <h2>NO ITEMS AVAILABLE YET</h2>
+                </div>
+            </div>
+
+            <!-- Quests Screen -->
+            <div class="screen" id="quests">
+                <div class="screen-header">
+                    <h1>QUESTS</h1>
+                    <div class="quest-icon">💎</div>
+                </div>
+                <p class="subtitle">AVAILABLE QUESTS AND MISSIONS</p>
+                
+                <div class="empty-state">
+                    <h2>NO QUESTS AVAILABLE</h2>
+                </div>
+            </div>
+
+            <!-- Status Screen -->
+            <div class="screen" id="status">
+                <div class="screen-header">
+                    <h1>STATUS</h1>
+                    <div class="rank-badge">
+                        <span class="rank-letter">E</span>
+                        <div class="rank-info">
+                            <span class="rank-text">RANK</span>
+                            <span class="rank-number">5</span>
+                            <span class="level-text">LEVEL</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="subtitle">YOUR STATS AND RANK</p>
+                
+                <div class="player-info-card">
+                    <div class="player-avatar">📷</div>
+                    <div class="player-details">
+                        <div class="detail-row">NAME : VANSH SHARMA</div>
+                        <div class="detail-row">CLASS : MAGE</div>
+                        <div class="detail-row">TITLE : WOLF SLAYER</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-icon">⚔️</span>
+                        <span class="stat-label">STR : 14.75</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">💙</span>
+                        <span class="stat-label">VIT : 10</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🏃</span>
+                        <span class="stat-label">AGI : 10</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🧠</span>
+                        <span class="stat-label">INT : 10</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">👁️</span>
+                        <span class="stat-label">PER : 10</span>
+                    </div>
+                    <div class="stat-item ability-points">
+                        <span class="stat-label">AVAILABLE<br>ABILITY<br>POINTS</span>
+                        <span class="stat-number">0</span>
+                    </div>
+                </div>
+
+                <div class="additional-stats">
+                    <div class="stat-row">LEADERBOARD POINTS: 10.0625</div>
+                    <div class="stat-row">PHYSICAL DAMAGE REDUCTION: 5%</div>
+                    <div class="stat-row">MAGICAL DAMAGE REDUCTION: 4%</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-screen="daily-tasks">
+                <span class="nav-icon">💎</span>
+            </button>
+            <button class="nav-btn" data-screen="inventory">
+                <span class="nav-icon">⚔️</span>
+            </button>
+            <button class="nav-btn" data-screen="quests">
+                <span class="nav-icon">💎</span>
+            </button>
+            <button class="nav-btn" data-screen="status">
+                <span class="nav-icon">🔥</span>
+            </button>
+            <button class="nav-btn" data-screen="settings">
+                <span class="nav-icon">⚙️</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
