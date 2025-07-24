@@ -238,7 +238,7 @@ class SoloLevelerApp {
     updateRankDisplay() {
         if (!this.playerData) return;
         
-        const rankBadge = document.getElementById('rankBadge');
+        const rankBadge = document.querySelector('.rank-badge');
         const rankName = document.getElementById('rankName');
         const rankScore = document.getElementById('rankScore');
         const rankProgress = document.getElementById('rankProgress');
@@ -247,6 +247,12 @@ class SoloLevelerApp {
         if (rankBadge) {
             rankBadge.textContent = this.playerData.rank || 'E';
             rankBadge.className = `rank-badge rank-${(this.playerData.rank || 'E').toLowerCase()}`;
+        }
+        
+        // Update stats grid with rank effects
+        const statsGrid = document.querySelector('.stats-grid');
+        if (statsGrid) {
+            statsGrid.className = `stats-grid rank-${(this.playerData.rank || 'E').toLowerCase()}`;
         }
         
         if (rankName) rankName.textContent = this.playerData.rank_name || 'AWAKENED';
@@ -336,27 +342,33 @@ class SoloLevelerApp {
     
     renderQuests() {
         // Quest progress is already in HTML, just update progress bars
-        const questCards = document.querySelectorAll('.quest-card');
+        const questCards = document.querySelectorAll('.quest-card[data-quest]');
         
         questCards.forEach(card => {
-            const questName = card.querySelector('.quest-name').textContent.toLowerCase();
+            const questType = card.dataset.quest;
             const progressBar = card.querySelector('.progress');
+            const completeBtn = card.querySelector('.complete-quest-btn');
             
-            if (questName.includes('strength') && this.quests.strength_training) {
-                const progress = (this.quests.strength_training.progress / this.quests.strength_training.max) * 100;
+            if (this.quests[questType]) {
+                const quest = this.quests[questType];
+                const progress = (quest.progress / quest.max) * 100;
                 if (progressBar) progressBar.style.width = `${progress}%`;
-            } else if (questName.includes('intelligence') && this.quests.intelligence) {
-                const progress = (this.quests.intelligence.progress / this.quests.intelligence.max) * 100;
-                if (progressBar) progressBar.style.width = `${progress}%`;
-            } else if (questName.includes('discipline') && this.quests.discipline) {
-                const progress = (this.quests.discipline.progress / this.quests.discipline.max) * 100;
-                if (progressBar) progressBar.style.width = `${progress}%`;
-            } else if (questName.includes('spiritual') && this.quests.spiritual_training) {
-                const progress = (this.quests.spiritual_training.progress / this.quests.spiritual_training.max) * 100;
-                if (progressBar) progressBar.style.width = `${progress}%`;
-            } else if (questName.includes('secret') && this.quests.secret_quests) {
-                const progress = (this.quests.secret_quests.progress / this.quests.secret_quests.max) * 100;
-                if (progressBar) progressBar.style.width = `${progress}%`;
+                
+                // Show complete button if quest is ready and not completed
+                if (completeBtn) {
+                    if (quest.progress >= quest.max && !quest.completed) {
+                        completeBtn.style.display = 'block';
+                        card.classList.add('quest-ready');
+                    } else {
+                        completeBtn.style.display = 'none';
+                        card.classList.remove('quest-ready');
+                    }
+                    
+                    if (quest.completed) {
+                        card.classList.add('quest-completed');
+                        completeBtn.style.display = 'none';
+                    }
+                }
             }
         });
         
@@ -364,6 +376,32 @@ class SoloLevelerApp {
         const questCount = document.querySelector('.quest-count');
         if (questCount && this.quests.personal_quests !== undefined) {
             questCount.textContent = `${this.quests.personal_quests} QUESTS REMAINING`;
+        }
+    }
+    
+    async completeQuest(questName) {
+        try {
+            const response = await fetch('/api/complete-quest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ quest_name: questName })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                await this.loadQuests();
+                await this.loadPlayerData();
+                this.showNotification(`Quest completed! +${result.rewards.xp} XP +${result.rewards.coins} coins!`);
+                this.addQuestCompleteShockwave();
+                this.addRewardClaimEffect();
+            } else {
+                this.showNotification(result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error completing quest:', error);
+            this.showNotification('Failed to complete quest', 'error');
         }
     }
     
@@ -458,6 +496,8 @@ class SoloLevelerApp {
     
     async toggleTask(taskIndex) {
         try {
+            const oldRank = this.playerData?.rank || 'E';
+            
             const response = await fetch('/api/complete-task', {
                 method: 'POST',
                 headers: {
@@ -469,8 +509,16 @@ class SoloLevelerApp {
             if (response.ok) {
                 await this.loadDailyTasks();
                 await this.loadPlayerData();
+                
+                // Check for rank up
+                const newRank = this.playerData?.rank || 'E';
+                if (oldRank !== newRank) {
+                    this.addRankUpEffect(newRank);
+                }
+                
                 this.showNotification('Task completed! +XP +Coins');
                 this.addCompletionEffect();
+                this.addQuestCompleteShockwave();
             }
         } catch (error) {
             console.error('Error completing task:', error);
@@ -694,6 +742,91 @@ class SoloLevelerApp {
                 { transform: `translateY(-${200 + Math.random() * 150}px) scale(0)`, opacity: 0 }
             ], {
                 duration: 2000 + Math.random() * 1000,
+                easing: 'ease-out'
+            }).onfinish = () => {
+                if (document.body.contains(particle)) {
+                    document.body.removeChild(particle);
+                }
+            };
+        }
+    }
+    
+    addQuestCompleteShockwave() {
+        const shockwave = document.createElement('div');
+        shockwave.className = 'quest-complete-effect';
+        shockwave.style.left = (window.innerWidth / 2 - 50) + 'px';
+        shockwave.style.top = (window.innerHeight / 2 - 50) + 'px';
+        
+        document.body.appendChild(shockwave);
+        
+        setTimeout(() => {
+            if (document.body.contains(shockwave)) {
+                document.body.removeChild(shockwave);
+            }
+        }, 1000);
+    }
+    
+    addRankUpEffect(newRank) {
+        const rankUpText = document.createElement('div');
+        rankUpText.className = 'rank-up-effect';
+        rankUpText.textContent = `RANK UP! ${newRank} RANK ACHIEVED!`;
+        
+        document.body.appendChild(rankUpText);
+        
+        // Create special particles based on rank
+        this.createRankUpParticles(newRank);
+        
+        setTimeout(() => {
+            if (document.body.contains(rankUpText)) {
+                document.body.removeChild(rankUpText);
+            }
+        }, 3000);
+    }
+    
+    createRankUpParticles(rank) {
+        const colors = {
+            'E': '#888888',
+            'D': '#daa520',
+            'C': '#c0c0c0',
+            'B': '#ffd700',
+            'A': '#ff6b6b',
+            'S': '#8b5cf6'
+        };
+        
+        const particleCount = rank === 'S' ? 30 : 20;
+        const color = colors[rank] || '#888888';
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 10px;
+                height: 10px;
+                background: ${color};
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+                box-shadow: 0 0 25px ${color};
+            `;
+            
+            const startX = window.innerWidth / 2;
+            const startY = window.innerHeight / 2;
+            const angle = (i / particleCount) * Math.PI * 2;
+            const velocity = 150 + Math.random() * 100;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            document.body.appendChild(particle);
+            
+            particle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { 
+                    transform: `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px) scale(0)`, 
+                    opacity: 0 
+                }
+            ], {
+                duration: 2000,
                 easing: 'ease-out'
             }).onfinish = () => {
                 if (document.body.contains(particle)) {

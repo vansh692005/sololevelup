@@ -428,6 +428,44 @@ body {
     grid-column: span 2;
 }
 
+.quest-card.quest-ready {
+    background: linear-gradient(135deg, rgba(244, 208, 63, 0.15) 0%, rgba(244, 208, 63, 0.05) 100%);
+    border-color: rgba(244, 208, 63, 0.5);
+    animation: questReadyPulse 2s ease-in-out infinite;
+}
+
+.quest-card.quest-completed {
+    opacity: 0.7;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.quest-card.quest-completed::after {
+    content: "✓ COMPLETED";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #22c55e;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.quest-card {
+    position: relative;
+}
+
+@keyframes questReadyPulse {
+    0%, 100% { 
+        box-shadow: 0 8px 25px rgba(244, 208, 63, 0.3);
+    }
+    50% { 
+        box-shadow: 0 12px 35px rgba(244, 208, 63, 0.6);
+    }
+}
+
 .quest-icon {
     font-size: 36px;
     margin-bottom: 10px;
@@ -657,26 +695,31 @@ body {
 .rank-badge.rank-e {
     background: linear-gradient(135deg, #666666, #888888);
     box-shadow: 0 4px 20px rgba(102, 102, 102, 0.6);
+    animation: rankEPulse 3s ease-in-out infinite;
 }
 
 .rank-badge.rank-d {
     background: linear-gradient(135deg, #cd7f32, #daa520);
     box-shadow: 0 4px 20px rgba(205, 127, 50, 0.6);
+    animation: rankDShimmer 2.5s ease-in-out infinite;
 }
 
 .rank-badge.rank-c {
     background: linear-gradient(135deg, #c0c0c0, #e5e5e5);
     box-shadow: 0 4px 20px rgba(192, 192, 192, 0.6);
+    animation: rankCGlow 2.2s ease-in-out infinite;
 }
 
 .rank-badge.rank-b {
     background: linear-gradient(135deg, #ffd700, #ffed4e);
     box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6);
+    animation: rankBBlaze 2s ease-in-out infinite;
 }
 
 .rank-badge.rank-a {
     background: linear-gradient(135deg, #dc143c, #ff6b6b);
     box-shadow: 0 4px 20px rgba(220, 20, 60, 0.6);
+    animation: rankAInferno 1.8s ease-in-out infinite;
 }
 
 .rank-badge.rank-s {
@@ -693,6 +736,61 @@ body {
     50% { 
         transform: scale(1.1);
         box-shadow: 0 8px 40px rgba(139, 92, 246, 1), 0 0 30px rgba(139, 92, 246, 0.5);
+    }
+}
+
+@keyframes rankEPulse {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 2px 10px rgba(102, 102, 102, 0.4);
+    }
+    50% { 
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(102, 102, 102, 0.6);
+    }
+}
+
+@keyframes rankDShimmer {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(205, 127, 50, 0.6);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 6px 25px rgba(218, 165, 32, 0.8), 0 0 15px rgba(218, 165, 32, 0.4);
+    }
+}
+
+@keyframes rankCGlow {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(192, 192, 192, 0.6);
+    }
+    50% { 
+        transform: scale(1.07);
+        box-shadow: 0 8px 30px rgba(229, 229, 229, 0.9), 0 0 20px rgba(192, 192, 192, 0.6);
+    }
+}
+
+@keyframes rankBBlaze {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6);
+    }
+    50% { 
+        transform: scale(1.08);
+        box-shadow: 0 8px 35px rgba(255, 237, 78, 1), 0 0 25px rgba(255, 215, 0, 0.8);
+    }
+}
+
+@keyframes rankAInferno {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(220, 20, 60, 0.6);
+    }
+    50% { 
+        transform: scale(1.1);
+        box-shadow: 0 10px 40px rgba(255, 107, 107, 1), 0 0 30px rgba(220, 20, 60, 0.8);
     }
 }
 
@@ -750,6 +848,45 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-bottom: 25px;
+}
+
+.stats-grid.rank-s {
+    animation: statsGridSRank 3s ease-in-out infinite;
+}
+
+.stats-grid.rank-a {
+    animation: statsGridARank 2.5s ease-in-out infinite;
+}
+
+.stats-grid.rank-b {
+    animation: statsGridBRank 2s ease-in-out infinite;
+}
+
+@keyframes statsGridSRank {
+    0%, 100% { 
+        filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3));
+    }
+    50% { 
+        filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6)) drop-shadow(0 0 30px rgba(168, 85, 247, 0.4));
+    }
+}
+
+@keyframes statsGridARank {
+    0%, 100% { 
+        filter: drop-shadow(0 0 8px rgba(220, 20, 60, 0.3));
+    }
+    50% { 
+        filter: drop-shadow(0 0 15px rgba(255, 107, 107, 0.5));
+    }
+}
+
+@keyframes statsGridBRank {
+    0%, 100% { 
+        filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.3));
+    }
+    50% { 
+        filter: drop-shadow(0 0 12px rgba(255, 237, 78, 0.5));
+    }
 }
 
 .stat {
@@ -1143,6 +1280,61 @@ rank-progress {
     }
     100% {
         transform: translateY(-200px) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes questCompleteShockwave {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(20);
+        opacity: 0;
+    }
+}
+
+.quest-complete-effect {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    border: 3px solid #7d7de8;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000;
+    animation: questCompleteShockwave 1s ease-out forwards;
+}
+
+.rank-up-effect {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: 900;
+    color: #f4d03f;
+    text-shadow: 0 0 30px rgba(244, 208, 63, 1);
+    pointer-events: none;
+    z-index: 1000;
+    animation: rankUpAnnouncement 3s ease-out forwards;
+}
+
+@keyframes rankUpAnnouncement {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    80% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0);
         opacity: 0;
     }
 }

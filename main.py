@@ -557,6 +557,27 @@ def delete_personal_quest():
     save_game_data(game_data)
     return jsonify({"success": True})
 
+@app.route('/api/complete-quest', methods=['POST'])
+def complete_quest():
+    """Complete a major quest"""
+    quest_name = request.json.get('quest_name')
+    
+    if quest_name in game_data["quests"] and isinstance(game_data["quests"][quest_name], dict):
+        quest = game_data["quests"][quest_name]
+        if quest["progress"] >= quest["max"] and not quest["completed"]:
+            quest["completed"] = True
+            
+            # Award rewards
+            award_experience(game_data, quest["reward_xp"])
+            game_data["player"]["coins"] += quest["reward_coins"]
+            
+            check_achievements(game_data)
+            save_game_data(game_data)
+            
+            return jsonify({"success": True, "rewards": {"xp": quest["reward_xp"], "coins": quest["reward_coins"]}})
+    
+    return jsonify({"success": False, "error": "Quest not ready for completion"})
+
 @app.route('/api/stats')
 def get_stats():
     """Get comprehensive player statistics"""
