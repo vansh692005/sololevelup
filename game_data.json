@@ -1,0 +1,184 @@
+{
+  "player": {
+    "name": "VANSH SHARMA",
+    "level": 2,
+    "current_xp": 30,
+    "xp_to_next_level": 120,
+    "class": "BEGINNER",
+    "title": "NEWBIE",
+    "rank": "E",
+    "total_experience": 130,
+    "stats": {
+      "strength": 13,
+      "agility": 10,
+      "perception": 10,
+      "vitality": 10,
+      "intelligence": 10,
+      "available_points": 0
+    },
+    "leaderboard_points": 0,
+    "physical_damage_reduction": 5,
+    "magical_damage_reduction": 3,
+    "streak": 1,
+    "max_streak": 1,
+    "coins": 30,
+    "energy": 100,
+    "max_energy": 100
+  },
+  "daily_tasks": [
+    {
+      "name": "12 PUSHUPS",
+      "completed": true,
+      "progress": 12,
+      "max": 12,
+      "xp_reward": 25,
+      "coin_reward": 10
+    },
+    {
+      "name": "12 SITUPS",
+      "completed": true,
+      "progress": 12,
+      "max": 12,
+      "xp_reward": 25,
+      "coin_reward": 10
+    },
+    {
+      "name": "2KM OUTDOOR RUN",
+      "completed": true,
+      "progress": 2,
+      "max": 2,
+      "xp_reward": 50,
+      "coin_reward": 20
+    },
+    {
+      "name": "MEDITATE 15 MIN",
+      "completed": true,
+      "progress": 15,
+      "max": 15,
+      "xp_reward": 30,
+      "coin_reward": 15
+    }
+  ],
+  "timer": {
+    "hours": 4,
+    "minutes": 43,
+    "seconds": 0
+  },
+  "last_reset": "2025-07-24",
+  "inventory": [
+    {
+      "name": "Health Potion",
+      "quantity": 3,
+      "type": "consumable",
+      "effect": "Restores 50 HP"
+    },
+    {
+      "name": "Energy Drink",
+      "quantity": 2,
+      "type": "consumable",
+      "effect": "Restores 30 Energy"
+    }
+  ],
+  "quests": {
+    "strength_training": {
+      "progress": 20,
+      "max": 100,
+      "completed": false,
+      "reward_coins": 100,
+      "reward_xp": 200
+    },
+    "intelligence": {
+      "progress": 0,
+      "max": 100,
+      "completed": false,
+      "reward_coins": 100,
+      "reward_xp": 200
+    },
+    "discipline": {
+      "progress": 20,
+      "max": 100,
+      "completed": false,
+      "reward_coins": 150,
+      "reward_xp": 250
+    },
+    "spiritual_training": {
+      "progress": 15,
+      "max": 100,
+      "completed": false,
+      "reward_coins": 120,
+      "reward_xp": 220
+    },
+    "secret_quests": {
+      "progress": 0,
+      "max": 100,
+      "completed": false,
+      "reward_coins": 500,
+      "reward_xp": 1000
+    },
+    "personal_quests": 0
+  },
+  "achievements": [
+    {
+      "name": "First Steps",
+      "description": "Complete your first daily task",
+      "unlocked": true,
+      "reward_coins": 50
+    },
+    {
+      "name": "Dedication",
+      "description": "Maintain a 7-day streak",
+      "unlocked": false,
+      "reward_coins": 200
+    },
+    {
+      "name": "Level Up",
+      "description": "Reach level 5",
+      "unlocked": false,
+      "reward_coins": 100
+    },
+    {
+      "name": "Quest Master",
+      "description": "Complete 5 quests",
+      "unlocked": false,
+      "reward_coins": 300
+    },
+    {
+      "name": "Unstoppable",
+      "description": "Maintain a 30-day streak",
+      "unlocked": false,
+      "reward_coins": 1000
+    }
+  ],
+  "shop": [
+    {
+      "name": "Health Potion",
+      "price": 25,
+      "type": "consumable",
+      "effect": "Restores 50 HP"
+    },
+    {
+      "name": "Energy Drink",
+      "price": 20,
+      "type": "consumable",
+      "effect": "Restores 30 Energy"
+    },
+    {
+      "name": "XP Booster",
+      "price": 100,
+      "type": "booster",
+      "effect": "Double XP for next task"
+    },
+    {
+      "name": "Stat Point",
+      "price": 200,
+      "type": "permanent",
+      "effect": "Gain 1 available stat point"
+    }
+  ],
+  "settings": {
+    "notifications": true,
+    "sound_effects": true,
+    "dark_mode": true,
+    "daily_reset_time": "00:00"
+  }
+}
