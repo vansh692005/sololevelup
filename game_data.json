@@ -1,15 +1,15 @@
 {
   "player": {
     "name": "VANSH SHARMA",
-    "level": 2,
-    "current_xp": 30,
-    "xp_to_next_level": 120,
+    "level": 3,
+    "current_xp": 10,
+    "xp_to_next_level": 144,
     "class": "BEGINNER",
     "title": "NEWBIE",
     "rank": "E",
-    "total_experience": 130,
+    "total_experience": 230,
     "stats": {
-      "strength": 13,
+      "strength": 15,
       "agility": 10,
       "perception": 10,
       "vitality": 10,
@@ -21,39 +21,42 @@
     "magical_damage_reduction": 3,
     "streak": 1,
     "max_streak": 1,
-    "coins": 80,
+    "coins": 180,
     "energy": 100,
-    "max_energy": 100
+    "max_energy": 100,
+    "rank_name": "AWAKENED",
+    "rank_score": 147,
+    "points_to_next_rank": 53
   },
   "daily_tasks": [
     {
-      "name": "12 PUSHUPS",
-      "completed": true,
-      "progress": 12,
-      "max": 12,
+      "name": "14 PUSHUPS",
+      "completed": false,
+      "progress": 0,
+      "max": 14,
       "xp_reward": 25,
       "coin_reward": 10
     },
     {
-      "name": "12 SITUPS",
-      "completed": true,
-      "progress": 12,
-      "max": 12,
+      "name": "14 SITUPS",
+      "completed": false,
+      "progress": 0,
+      "max": 14,
       "xp_reward": 25,
       "coin_reward": 10
     },
     {
       "name": "2KM OUTDOOR RUN",
-      "completed": true,
-      "progress": 2,
+      "completed": false,
+      "progress": 0,
       "max": 2,
       "xp_reward": 50,
       "coin_reward": 20
     },
     {
       "name": "MEDITATE 15 MIN",
-      "completed": true,
-      "progress": 15,
+      "completed": false,
+      "progress": 0,
       "max": 15,
       "xp_reward": 30,
       "coin_reward": 15
@@ -64,7 +67,7 @@
     "minutes": 43,
     "seconds": 0
   },
-  "last_reset": "2025-07-24",
+  "last_reset": "2025-07-25",
   "inventory": [
     {
       "name": "Health Potion",
@@ -209,6 +212,16 @@
       "created_date": "2025-07-24",
       "reward_xp": 100,
       "reward_coins": 50
+    },
+    {
+      "id": 4,
+      "name": "Learn",
+      "description": "",
+      "completed": true,
+      "created_date": "2025-07-24",
+      "reward_xp": 100,
+      "reward_coins": 50,
+      "completion_date": "2025-07-24"
     }
   ]
 }
